@@ -57,17 +57,23 @@ def searching(r, zeroP, border, kx, ky, sec):
             return np.abs(r[kx, ky, 0] + x1 - x2 - r[kx, ky + 1, 1])
         if r[kx + 1, ky, 0] == NaN:
             constraint_ueq = [
-                lambda x: np.abs(r[kx, ky, 0] - x[0]) - 0.2
+                lambda x: np.abs(r[kx, ky, 0] - x[0]) - 0.1
             ]
             ga = GA(func=obj_func, n_dim=2, size_pop=popsize, max_iter=maxiter,
-                    lb=[-r[kx + 1, ky, 2], -r[kx + 1, ky + 1, 2]],
-                    ub=[r[kx + 1, ky, 2] + prec, r[kx + 1, ky + 1, 2] + prec], precision=[prec, prec],constraint_ueq=constraint_ueq)
+                    lb=[-r[kx + 1, ky, 2], 0],
+                    ub=[r[kx + 1, ky, 2] + prec, r[kx + 1, ky + 1, 2] + prec], precision=[prec, prec],
+                    constraint_ueq=constraint_ueq)
         else:
+            constraint_ueq = [
+                lambda x: np.abs(r[kx, ky, 1] - x[0]) - 0.1,
+                lambda x: np.abs(r[kx, ky+1, 0] - x[1]) - 0.1,
+            ]
             constraint_eq = [
                 lambda x: r[kx + 1, ky, 2] ** 2 - r[kx + 1, ky, 0] ** 2 - x[0] ** 2
             ]
-            ga = GA(func=obj_func, n_dim=2, size_pop=popsize, max_iter=maxiter, lb=[-r[kx + 1, ky, 2], -r[kx + 1, ky + 1, 2]],
-                    ub=[r[kx + 1, ky, 2] + prec, r[kx + 1, ky + 1, 2] + prec], precision=[prec, prec], constraint_eq=constraint_eq)
+            ga = GA(func=obj_func, n_dim=2, size_pop=popsize, max_iter=maxiter, lb=[-r[kx + 1, ky, 2], 0],
+                    ub=[r[kx + 1, ky, 2] + prec, r[kx + 1, ky + 1, 2] + prec], precision=[prec, prec],
+                    constraint_eq=constraint_eq, constraint_ueq=constraint_ueq)
         best_x, _ = ga.run()
         r[kx + 1, ky, 1] = best_x[0]
         r[kx + 1, ky + 1, 0] = best_x[1]
@@ -82,14 +88,20 @@ def searching(r, zeroP, border, kx, ky, sec):
             constraint_ueq = [
                 lambda x: np.abs(r[kx, ky, 1] - x[0]) - 0.2
             ]
-            ga = GA(func=obj_func, n_dim=2, size_pop=popsize, max_iter=maxiter, lb=[-r[kx, ky + 1, 2], - r[kx - 1, ky + 1, 2]],
-                    ub=[r[kx, ky + 1, 2]+ prec, r[kx - 1, ky + 1, 2]+ prec], precision=[prec, prec],constraint_ueq=constraint_ueq)
+            ga = GA(func=obj_func, n_dim=2, size_pop=popsize, max_iter=maxiter, lb=[0, - r[kx - 1, ky + 1, 2]],
+                    ub=[r[kx, ky + 1, 2]+ prec, r[kx - 1, ky + 1, 2]+ prec], precision=[prec, prec]
+                    ,constraint_ueq=constraint_ueq)
         else:
+            constraint_ueq = [
+                lambda x: np.abs(r[kx, ky, 0] - x[0]) - 0.1,
+                lambda x: np.abs(r[kx -1, ky, 1] - x[1]) - 0.1,
+            ]
             constraint_eq = [
                 lambda x: r[kx, ky + 1, 2] ** 2 - r[kx, ky + 1, 1] ** 2 - x[0] ** 2
             ]
-            ga = GA(func=obj_func, n_dim=2, size_pop=popsize, max_iter=maxiter, lb=[-r[kx, ky + 1, 2], - r[kx - 1, ky + 1, 2]],
-                    ub=[r[kx, ky + 1, 2]+ prec, r[kx - 1, ky + 1, 2]+ prec], precision=[prec, prec], constraint_eq=constraint_eq)
+            ga = GA(func=obj_func, n_dim=2, size_pop=popsize, max_iter=maxiter, lb=[0, - r[kx - 1, ky + 1, 2]],
+                    ub=[r[kx, ky + 1, 2]+ prec, r[kx - 1, ky + 1, 2]+ prec], precision=[prec, prec],
+                    constraint_eq=constraint_eq, constraint_ueq = constraint_ueq)
         best_x, _ = ga.run()
         r[kx, ky + 1, 0] = best_x[0]
         r[kx - 1, ky + 1, 1] = best_x[1]
@@ -104,14 +116,19 @@ def searching(r, zeroP, border, kx, ky, sec):
             constraint_ueq = [
                 lambda x: np.abs(r[kx, ky, 0] - x[0]) - 0.2
             ]
-            ga = GA(func=obj_func, n_dim=2, size_pop=popsize, max_iter=maxiter, lb=[-r[kx - 1, ky, 2], -r[kx - 1, ky - 1, 2]],
+            ga = GA(func=obj_func, n_dim=2, size_pop=popsize, max_iter=maxiter, lb=[-r[kx - 1, ky, 2], 0],
                     ub=[r[kx - 1, ky, 2]+ prec, r[kx - 1, ky - 1, 2]+ prec], precision=[prec, prec],constraint_ueq=constraint_ueq)
         else:
+            constraint_ueq = [
+                lambda x: np.abs(r[kx, ky, 1] - x[0]) - 0.1,
+                lambda x: np.abs(r[kx, ky - 1, 0] - x[1]) - 0.1,
+            ]
             constraint_eq = [
                 lambda x: r[kx - 1, ky, 2] ** 2 - r[kx - 1, ky, 0] ** 2 - x[0] ** 2
             ]
-            ga = GA(func=obj_func, n_dim=2, size_pop=popsize, max_iter=maxiter, lb=[-r[kx - 1, ky, 2], -r[kx - 1, ky - 1, 2]],
-                    ub=[r[kx - 1, ky, 2]+ prec, r[kx - 1, ky - 1, 2]+ prec], precision=[prec, prec], constraint_eq=constraint_eq)
+            ga = GA(func=obj_func, n_dim=2, size_pop=popsize, max_iter=maxiter, lb=[-r[kx - 1, ky, 2], 0],
+                    ub=[r[kx - 1, ky, 2]+ prec, r[kx - 1, ky - 1, 2]+ prec], precision=[prec, prec],
+                    constraint_eq=constraint_eq, constraint_ueq=constraint_ueq)
         best_x, _ = ga.run()
         r[kx - 1, ky, 1] = best_x[0]
         r[kx - 1, ky - 1, 0] = best_x[1]
@@ -126,14 +143,19 @@ def searching(r, zeroP, border, kx, ky, sec):
             constraint_ueq = [
                 lambda x: np.abs(r[kx, ky, 1] - x[0]) - 0.2
             ]
-            ga = GA(func=obj_func, n_dim=2, size_pop=popsize, max_iter=maxiter, lb=[-r[kx, ky - 1, 2], -r[kx + 1, ky - 1, 2]],
+            ga = GA(func=obj_func, n_dim=2, size_pop=popsize, max_iter=maxiter, lb=[0, -r[kx + 1, ky - 1, 2]],
                     ub=[r[kx, ky - 1, 2]+ prec, r[kx + 1, ky - 1, 2]+ prec], precision=[prec, prec],constraint_ueq=constraint_ueq)
         else:
+            constraint_ueq = [
+                lambda x: np.abs(r[kx, ky, 0] - x[0]) - 0.1,
+                lambda x: np.abs(r[kx + 1, ky, 1] - x[1]) - 0.1
+            ]
             constraint_eq = [
                 lambda x: r[kx, ky - 1, 2] ** 2 - r[kx, ky - 1, 1] ** 2 - x[0] ** 2
             ]
-            ga = GA(func=obj_func, n_dim=2, size_pop=popsize, max_iter=maxiter, lb=[-r[kx, ky - 1, 2], -r[kx + 1, ky - 1, 2]],
-                    ub=[r[kx, ky - 1, 2]+ prec, r[kx + 1, ky - 1, 2]+ prec], precision=[prec, prec], constraint_eq=constraint_eq)
+            ga = GA(func=obj_func, n_dim=2, size_pop=popsize, max_iter=maxiter, lb=[0, -r[kx + 1, ky - 1, 2]],
+                    ub=[r[kx, ky - 1, 2]+ prec, r[kx + 1, ky - 1, 2]+ prec], precision=[prec, prec],
+                    constraint_eq=constraint_eq, constraint_ueq=constraint_ueq)
         best_x, _ = ga.run()
         r[kx, ky - 1, 0] = best_x[0]
         r[kx + 1, ky - 1, 1] = best_x[1]
@@ -168,17 +190,16 @@ def searching(r, zeroP, border, kx, ky, sec):
             lambda x: r[zeroP[0] + border + 1, zeroP[1] - border, 2] ** 2 - r[
                 zeroP[0] + border + 1, zeroP[1] - border, 1] ** 2 - x[2] ** 2
         ]
-
         ga = GA(func=obj_func1, n_dim=1, size_pop=popsize, max_iter=maxiter,
-                lb=-r[zeroP[0] + border + 1, zeroP[1] - border - 1, 2],
+                lb=0,
                 ub=r[zeroP[0] + border + 1, zeroP[1] - border - 1, 2] + prec,
                 precision=prec)
         best_x, _ = ga.run()
         r[zeroP[0] + border + 1, zeroP[1] - border - 1, 0] = best_x[0]
         ga = GA(func=obj_func2, n_dim=3, size_pop=popsize, max_iter=maxiter,
-                lb=[-r[zeroP[0] + border, zeroP[1] - border - 1, 2],
+                lb=[0,
                     -r[zeroP[0] + border + 1, zeroP[1] - border - 1, 2],
-                    -r[zeroP[0] + border + 1, zeroP[1] - border, 2]],
+                    0],
                 ub=[r[zeroP[0] + border, zeroP[1] - border - 1, 2]+ prec,
                     r[zeroP[0] + border + 1, zeroP[1] - border - 1, 2]+ prec,
                     r[zeroP[0] + border + 1, zeroP[1] - border, 2]+ prec],
@@ -226,7 +247,7 @@ def searching(r, zeroP, border, kx, ky, sec):
         r[zeroP[0] + border + 1, zeroP[1] + border + 1, 1] = best_x[0]
         ga = GA(func=obj_func4, n_dim=3, size_pop=popsize, max_iter=maxiter,
                 lb=[-r[zeroP[0] + border + 1, zeroP[1] + border, 2],
-                    -r[zeroP[0] + border + 1, zeroP[1] + border + 1, 2],
+                    0,
                     -r[zeroP[0] + border, zeroP[1] + border + 1, 2]],
                 ub=[r[zeroP[0] + border + 1, zeroP[1] + border, 2]+ prec,
                     r[zeroP[0] + border + 1, zeroP[1] + border + 1, 2]+ prec,
@@ -269,14 +290,14 @@ def searching(r, zeroP, border, kx, ky, sec):
         ]
 
         ga = GA(func=obj_func5, n_dim=1, size_pop=popsize, max_iter=maxiter,
-                lb=-r[zeroP[0] + border - 1, zeroP[1] + border + 1, 2],
+                lb=0,
                 ub=r[zeroP[0] + border - 1, zeroP[1] + border + 1, 2]+ prec, precision=prec)
         best_x, _ = ga.run()
         r[zeroP[0] - border - 1, zeroP[1] + border + 1, 0] = best_x[0]
         ga = GA(func=obj_func6, n_dim=3, size_pop=popsize, max_iter=maxiter,
-                lb=[-r[zeroP[0] - border, zeroP[1] + border + 1, 2],
+                lb=[0,
                     -r[zeroP[0] - border - 1, zeroP[1] + border + 1, 2],
-                    -r[zeroP[0] - border - 1, zeroP[1] + border, 2]],
+                    0],
                 ub=[r[zeroP[0] - border, zeroP[1] + border + 1, 2]+ prec,
                     r[zeroP[0] - border - 1, zeroP[1] + border + 1, 2]+ prec,
                     r[zeroP[0] - border - 1, zeroP[1] + border, 2]+ prec],
@@ -326,7 +347,7 @@ def searching(r, zeroP, border, kx, ky, sec):
         r[zeroP[0] - border - 1, zeroP[1] - border - 1, 1] = best_x[0]
         ga = GA(func=obj_func8, n_dim=3, size_pop=popsize, max_iter=maxiter,
                 lb=[-r[zeroP[0] - border - 1, zeroP[1] - border, 2],
-                    -r[zeroP[0] - border - 1, zeroP[1] - border - 1, 2],
+                    0,
                     -r[zeroP[0] - border, zeroP[1] - border - 1, 2]],
                 ub=[r[zeroP[0] - border - 1, zeroP[1] - border, 2] + prec,
                     r[zeroP[0] - border - 1, zeroP[1] - border - 1, 2] + prec,
