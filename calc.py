@@ -86,7 +86,7 @@ def searching(r, zeroP, border, kx, ky, sec):
 
         if r[kx, ky + 1, 1] == NaN:
             constraint_ueq = [
-                lambda x: np.abs(r[kx, ky, 1] - x[0]) - 0.2
+                lambda x: np.abs(r[kx, ky, 1] - x[0]) - 0.1
             ]
             ga = GA(func=obj_func, n_dim=2, size_pop=popsize, max_iter=maxiter, lb=[0, - r[kx - 1, ky + 1, 2]],
                     ub=[r[kx, ky + 1, 2]+ prec, r[kx - 1, ky + 1, 2]+ prec], precision=[prec, prec]
@@ -114,7 +114,7 @@ def searching(r, zeroP, border, kx, ky, sec):
 
         if r[kx - 1, ky, 0] == NaN:
             constraint_ueq = [
-                lambda x: np.abs(r[kx, ky, 0] - x[0]) - 0.2
+                lambda x: np.abs(r[kx, ky, 0] - x[0]) - 0.1
             ]
             ga = GA(func=obj_func, n_dim=2, size_pop=popsize, max_iter=maxiter, lb=[-r[kx - 1, ky, 2], 0],
                     ub=[r[kx - 1, ky, 2]+ prec, r[kx - 1, ky - 1, 2]+ prec], precision=[prec, prec],constraint_ueq=constraint_ueq)
@@ -141,7 +141,7 @@ def searching(r, zeroP, border, kx, ky, sec):
 
         if r[kx, ky - 1, 1] == NaN:
             constraint_ueq = [
-                lambda x: np.abs(r[kx, ky, 1] - x[0]) - 0.2
+                lambda x: np.abs(r[kx, ky, 1] - x[0]) - 0.1
             ]
             ga = GA(func=obj_func, n_dim=2, size_pop=popsize, max_iter=maxiter, lb=[0, -r[kx + 1, ky - 1, 2]],
                     ub=[r[kx, ky - 1, 2]+ prec, r[kx + 1, ky - 1, 2]+ prec], precision=[prec, prec],constraint_ueq=constraint_ueq)
