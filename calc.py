@@ -10,12 +10,12 @@ import sys
 import matplotlib.pyplot as plt
 
 maxborder = 30
-prec = 1e-6
+prec = 1e-3
 NaN = sys.maxsize
 path = "./data.csv"
 zeroP = (147, 126)
-maxiter = 800
-popsize = 50
+maxiter = 300
+popsize = 20
 
 def importData():
     """
@@ -190,6 +190,9 @@ def searching(r, zeroP, border, kx, ky, sec):
             lambda x: r[zeroP[0] + border + 1, zeroP[1] - border, 2] ** 2 - r[
                 zeroP[0] + border + 1, zeroP[1] - border, 1] ** 2 - x[2] ** 2
         ]
+
+
+
         ga = GA(func=obj_func1, n_dim=1, size_pop=popsize, max_iter=maxiter,
                 lb=0,
                 ub=r[zeroP[0] + border + 1, zeroP[1] - border - 1, 2] + prec,
